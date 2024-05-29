@@ -120,7 +120,7 @@ class pengajuanpenyediaController extends Controller
         $pengajuanpenyedia->konfirmasi = $request->konfirmasi;
         $pengajuanpenyedia->save();
 
-        $perubahanpenyedia = perubahanpenyedia::where('id_user',$id)->first();
+        $perubahanpenyedia = perubahanpenyedia::where('id',$request->id)->first();
         $perubahanpenyedia->status = 'ya';
         $perubahanpenyedia->save();
         return redirect()->back()->with('status','Pengajuan Perubahan  Berhasil Diterima');

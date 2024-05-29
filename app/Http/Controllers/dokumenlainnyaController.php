@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\dokumenlainnya;
+use App\Models\pengajuanpenyedia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +18,8 @@ class dokumenlainnyaController extends Controller
     public function index()
     {
         $dokumenlainnya = dokumenlainnya::where('id_user', Auth::user()->id)->get();
-        return view('dokumenlainnya.index',['dokumenlainnya' => $dokumenlainnya]);
+        $pengajuanpenyedia = pengajuanpenyedia::where('id_user', Auth::user()->id)->first();
+        return view('dokumenlainnya.index',['dokumenlainnya' => $dokumenlainnya,'pengajuanpenyedia' => $pengajuanpenyedia]);
     }
 
     /**

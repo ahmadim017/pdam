@@ -14,17 +14,12 @@ class RoleMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next)
     {
-        if (!$request->user()) {
-            abort(403, 'Unauthorized');
+        if ($request->user() && ($request->user()->role === 'VERIFIKATOR' || $request->user()->role === 'ADMIN')) {
+            return $next($request);
         }
-    
-        // Periksa apakah peran pengguna cocok dengan peran yang diharapkan
-        if ($request->user()->role !== $role) {
-            abort(403, 'Unauthorized');
-        }
-    
-        return $next($request);
+
+        abort(403, 'Unauthorized');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\pajak;
+use App\Models\pengajuanpenyedia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +18,8 @@ class pajakController extends Controller
     public function index()
     {
         $pajak = pajak::where('id_user', Auth::user()->id)->get();
-        return view('pajak.index',['pajak' => $pajak]);
+        $pengajuanpenyedia = pengajuanpenyedia::where('id_user', Auth::user()->id)->first();
+        return view('pajak.index',['pajak' => $pajak,'pengajuanpenyedia' => $pengajuanpenyedia]);
     }
 
     /**

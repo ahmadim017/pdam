@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\pengajuanpenyedia;
 use App\Models\pengurusperushaan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,8 @@ class pengurusperusahaanController extends Controller
     public function index()
     {
         $pengurusperusahaan = pengurusperushaan::where('id_user', Auth::user()->id)->get();
-        return view('pengurusperusahaan.index',['pengurusperusahaan' => $pengurusperusahaan]);
+        $pengajuanpenyedia = pengajuanpenyedia::where('id_user', Auth::user()->id)->first();
+        return view('pengurusperusahaan.index',['pengurusperusahaan' => $pengurusperusahaan,'pengajuanpenyedia' => $pengajuanpenyedia]);
     }
 
     /**

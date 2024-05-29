@@ -93,4 +93,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(perubahanpenyedia::class, 'id_user');
     }
+    public function penjelasan()
+    {
+        return $this->hasOne(penjelasan::class, 'id_user');
+    }
 }

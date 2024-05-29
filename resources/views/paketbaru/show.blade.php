@@ -21,7 +21,14 @@
             <a href="#" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Informasi Paket</a>
             </div>
         </li>
-        
+        <li>
+            <div class="flex items-center">
+            <svg class="rtl:rotate-180 block w-3 h-3 mx-1 text-gray-400 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+            </svg>
+            <a href="{{route('paketbaru.penjelasan',[$nontender->id])}}" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Pemberian Penjelasan</a>
+            </div>
+        </li>
         </ol>
     </nav>
 
@@ -230,7 +237,11 @@
                             <div id="defaultTabContent">
                                 <div class="hidden p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800" id="about" role="tabpanel" aria-labelledby="about-tab">
                                     <input name="filepenawaran" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help" id="user_avatar" type="file">
+                                    
                                     <div class="mt-1 text-xs text-gray-500 dark:text-gray-300" id="user_avatar_help">ukuran file mximal 10mb</div>
+                                    @error('filepenawaran')
+                                    <div class="text-red-500">{{ $message }}</div>
+                                    @enderror
                                 </div>    
                                 
                                 @if($nontender->filepenawaran)
@@ -246,25 +257,71 @@
                     </tr>
                     <tr class="border-b">
                         <th scope="col" class="px-6 py-3 bg-gray-100">
-                           Harga Penawaran
+                           Nomor Surat Penawaran Harga
                         </th>
                         <td class="pl-2">
-                            <input type="text" id="hargapenawaran" value="{{ number_format(old('hargapenawaran', $nontender->hargapenawaran ?? '0'), 0, '', '.') }}" name="hargapenawaran" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="1xxx">
+                            <input type="text" value="{{ old('nosuratpenawaran', $nontender->nosuratpenawaran ?? '') }}" name="nosuratpenawaran" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="027/xxx/xxx/">
+                            @error('nosuratpenawaran')
+                            <div class="text-red-500">{{ $message }}</div>
+                    @enderror
                         </td>
-                        
+                    </tr>
+                    <tr class="border-b">
+                        <th scope="col" class="px-6 py-3 bg-gray-100">
+                           Tanggal Surat Penawaran Harga
+                        </th>
+                        <td class="pl-2">
+                            <input type="date" value="{{ old('tglsuratpenawaran', $nontender->tglsuratpenawaran ?? '') }}" name="tglsuratpenawaran" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            @error('tglsuratpenawaran')
+                                    <div class="text-red-500">{{ $message }}</div>
+                            @enderror
+                        </td>
+                    </tr>
+                    
+                    <tr class="border-b">
+                        <th scope="col" class="px-6 py-3 bg-gray-100">
+                            Harga Penawaran
+                        </th>
+                        <td class="pl-2">
+                            @php
+                                // Mengambil nilai lama atau dari model dan konversi ke float
+                                $hargaPenawaran = old('hargapenawaran', $nontender->hargapenawaran ?? '0');
+                                $hargaPenawaran = floatval(str_replace('.', '', $hargaPenawaran));
+                            @endphp
+                    
+                            <input type="text" id="hargapenawaran" value="{{ number_format($hargaPenawaran, 0, '', '.') }}" name="hargapenawaran" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="1xxx">
+                        </td>
                     </tr>
                  
               </table>
 
               
             </div>
-            @if($nontender->status == 'Diterima')
-
-            @else
-            <x-button class="ml-3 mt-3">
-                {{ __('Simpan') }}
-            </x-button>
-            @endif
+            @php
+            $kegiatan = false;
+            foreach ($jadwal as $a) {
+                // Mengambil tanggal jadwal
+                $jadwalDate = \Carbon\Carbon::parse($a->tglpelaksanaan)->toDateString();
+        
+                // Bandingkan tanggal jadwal dengan tanggal hari ini
+                if ($nontender->id_paket == $a->id_paket && $jadwalDate == now()->toDateString()) {
+                    if ($a->kegiatan == 'Pemasukan Dokumen Penawaran') {
+                        $kegiatan = true;
+                        break;
+                    }
+                }
+            }
+        @endphp
+        
+        @if($nontender->status == 'Diterima' )
+            
+        @elseif($kegiatan)
+        <x-button class="ml-3 mt-3">
+            {{ __('Simpan') }}
+        </x-button>
+        @else
+        
+        @endif
             <a href="{{route('paketbaru.index')}}" class="  mt-3 inline-flex items-center px-4 py-2 bg-cyan-700 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-cyan-800 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">Kembali</a>
            
         </form>

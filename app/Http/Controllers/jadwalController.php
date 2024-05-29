@@ -77,7 +77,7 @@ class jadwalController extends Controller
         }
     
         // Redirect ke halaman yang sesuai atau tampilkan pesan sukses
-        return redirect()->route('pengadaan.show',[$data['id_paket']])->with('jadwal', 'Data jadwal kegiatan berhasil disimpan.');
+        return redirect()->back()->with('status', 'Data jadwal kegiatan berhasil disimpan.');
     
     }
 

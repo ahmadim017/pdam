@@ -171,7 +171,7 @@
                                         File Izin
                                      </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Action
+                                        
                                     </th>
                                 </tr>
                             </thead>
@@ -191,13 +191,7 @@
                                   </svg></a></td>
                                   <td >
                                     @if ($pengajuanpenyedia->konfirmasi == 'ya')
-                                    <form action="#" onsubmit="return confirm('Apakah Anda Yakin ingin dihapus?')" method="POST">
-                                        @csrf
-                                        @method('delete')
-                                        <button disabled type="submit" class="text-white bg-red-500 hover:bg-red-700 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"><svg class="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
-                                          </svg></button>
-                                    </form>
+                                   
                                     @else
                                     <form action="{{route('izinusaha.destroy', [$i->id])}}" onsubmit="return confirm('Apakah Anda Yakin ingin dihapus?')" method="POST">
                                         @csrf

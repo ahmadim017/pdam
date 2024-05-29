@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\aktapendirian;
 use App\Models\aktaperubahan;
+use App\Models\pengajuanpenyedia;
 use App\Models\pengesahan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,8 @@ class aktependirianController extends Controller
         $akteperubahan = aktaperubahan::where('id_user', Auth::user()->id)->get();
         $aktapendirian = aktapendirian::where('id_user', Auth::user()->id)->get();
         $pengesahan = pengesahan::where('id_user', Auth::user()->id)->get();
-        return view('aktapendirian.index',['aktapendirian' => $aktapendirian,'akteperubahan' => $akteperubahan,'pengesahan' => $pengesahan]);
+        $pengajuanpenyedia = pengajuanpenyedia::where('id_user', Auth::user()->id)->first();
+        return view('aktapendirian.index',['aktapendirian' => $aktapendirian,'akteperubahan' => $akteperubahan,'pengesahan' => $pengesahan,'pengajuanpenyedia' => $pengajuanpenyedia]);
     }
 
     /**

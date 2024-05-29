@@ -46,9 +46,13 @@
                                     
                                    
                                 </div>
+                                @if($pengajuanpenyedia->konfirmasi == 'ya')
+
+                                @else
                                 <button type="submit" class="text-white inline-flex items-center bg-cyan-700 hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                     Simpan
                                 </button>
+                                @endif
                             </form>
                         </div>
                     </div>
@@ -72,7 +76,7 @@
                                         Dokumen
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Action
+                                       
                                     </th>
                                 </tr>
                             </thead>
@@ -88,7 +92,9 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 15v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2m-8 1V4m0 12-4-4m4 4 4-4"/>
                                   </svg></a></td>
                                   <td >
-                                    
+                                    @if($pengajuanpenyedia->konfirmasi == 'ya')
+
+                                    @else
                                     <form action="{{route('aktaperubahan.destroy', [$item->id])}}" onsubmit="return confirm('Apakah Anda Yakin ingin dihapus?')" method="POST">
                                         @csrf
                                         @method('delete')
@@ -96,6 +102,7 @@
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
                                           </svg></button>
                                     </form>
+                                    @endif
                                   </td>
                                  
                              </tr>

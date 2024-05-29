@@ -7,7 +7,7 @@
                 <div class="shrink-0 flex items-center">
                     <a href="#" class="flex items-center">
                         <img src="{{asset('public/image/logo.png')}}" class="h-9 mr-1" alt="ppu Logo" />
-                        <span class="self-center text-stone-600 text-2xl font-semibold whitespace-nowrap dark:text-white" >E-Procurement Perumda Danum Taka</span>
+                        <span class="self-center text-stone-600 text-2xl font-semibold whitespace-nowrap " >E-Procurement Perumda Danum Taka</span>
                     </a>
                 </div>
 

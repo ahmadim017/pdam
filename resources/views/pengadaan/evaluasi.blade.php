@@ -48,9 +48,13 @@ $(document).ready(function() {
       <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item"><a href="{{route('pengadaan.index')}}">Daftar Paket</a></li>
         <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('pengadaan.show',[$pengadaan->id])}}">Detail Paket</a></li>
+        <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('pengadaan.aanwizing',[$pengadaan->id])}}">Pemberian Penjelasan</a></li>
         @if($nontender->hargapenawaran)
         <li class="breadcrumb-item text-secondary" aria-current="page"><a href="#">Evaluasi</a></li>
         @endif
+        <li class="breadcrumb-item text-secondary" aria-current="page"><a href="#">Negoisasi Teknis dan Biaya</a></li>
+        <li class="breadcrumb-item text-secondary" aria-current="page"><a href="#">Penetapan Pemenang</a></li>
+        <li class="breadcrumb-item text-secondary" aria-current="page"><a href="#">Pengumuman Pemenang</a></li>
         @if($nontender->status == 'Diterima')
         <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('pengadaan.kontrak',[$pengadaan->id])}}">Buat Kontrak</a></li>
         @endif
@@ -80,10 +84,7 @@ $(document).ready(function() {
       <th class="bg-light">Nama Paket</th>
   <td colspan="3"><strong>{{$pengadaan->namapaket}}</strong></td>
   </tr>
-  <tr>
-    <th class="bg-light">Pagu</th>
-<td><strong>Rp.{{number_format($pengadaan->pagu)}}</strong></td>
-</tr>
+ 
   <tr>
     <th class="bg-light">Hps</th>
 <td><strong>Rp.{{number_format($pengadaan->hps)}}</strong></td>
@@ -136,14 +137,39 @@ $(document).ready(function() {
       
   </td>
 </tr>
-
-
-</table>
-</div>
 <form action="{{route('nontender.evaluasi',[$nontender->id])}}" id="uploadForm1" method="POST" onsubmit="return confirm('Apakah Anda sudah mengavaluasi dengan benar?')">
   @csrf
   <input type="hidden" value="{{$pengadaan->id}}" name="id_paket">
+<tr>
+  <th class="bg-light">No Berita Acara Koreksi Aritmatik</th>
+  <td><strong><input type="text" name="baaritmatik" value="{{ old('baaritmatik', $nontender->baaritmatik ?? '') }}" class="form-control {{$errors->first('baaritmatik') ? "is-invalid" : ""}}"></strong></td>
+  <div class="invalid-feedbeck">
+            <span class="text-danger">{{$errors->first('baaritmatik')}}</span>
+          </div>
+</tr>
+<tr>
+  <th class="bg-light">Tanggal Berita Acara</th>
+  <td><strong><input type="date" name="tglaritmatik" value="{{ old('tglaritmatik', $nontender->tglaritmatik ?? '') }}" class="form-control {{$errors->first('tglaritmatik') ? "is-invalid" : ""}}"></strong></td>
+  <div class="invalid-feedbeck">
+            <span class="text-danger">{{$errors->first('tglaritmatik')}}</span>
+          </div>
+</tr>
 </form>
+@if(optional($nontender)->baaritmatik)
+<tr>
+  <th class="bg-light">Dokumen BA Aritmatik</th>
+  <td>
+   
+    <a href="{{route('baaanwizing.cetak',[$pengadaan->id])}}" target="_blank" class="btn btn-success btn-sm mr-2">Dokumen BA Aritmatik</a>
+      
+  </td>
+</tr>
+@endif
+</table>
+</div>
+
+
+@if(Auth::user()->role == 'VERIFIKATOR')
 @if($nontender->status == 'Diterima')
 <button type="submit" id="uploadButton1" class="btn btn-secondary btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
   <path d="M11 2H9v3h2z"/>
@@ -155,7 +181,7 @@ $(document).ready(function() {
   <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
 </svg> Setuju</button>
 @endif
-
+@endif
 <a href="{{route('pengadaan.index')}}" class="btn btn-primary btn-sm"><i class="fa fa-arrow-circle-left fa-fw fa-sm"></i>Kembali</a>
         </div>
       </div>

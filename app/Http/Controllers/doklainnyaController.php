@@ -38,7 +38,7 @@ class doklainnyaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|max:2048|mimes:doc,pdf,rar,jpeg,png,zip,xls', // Sesuaikan dengan ekstensi yang diizinkan
+            'file' => 'required|file|max:10048|mimes:doc,pdf,rar,jpeg,png,zip,xls,docx,xlsx', // Sesuaikan dengan ekstensi yang diizinkan
             'id_paket' => 'required' // Sesuaikan dengan aturan validasi yang diperlukan
         ]);
         
@@ -64,7 +64,7 @@ class doklainnyaController extends Controller
     
         // Berikan respons JSON ke klien
 
-        return redirect()->route('pengadaan.show',[$kak->id_paket])->with('status','File berhasil diunggah.');
+        return redirect()->back()->with('status','File berhasil diunggah.');
     }
 
     /**
@@ -114,6 +114,6 @@ class doklainnyaController extends Controller
             Storage::delete($kak->file);
         }
         $kak->delete();
-        return redirect()->route('pengadaan.show',[$kak->id_paket])->with('Status','File berhasil dihapus.');
+        return redirect()->back()->with('Status','File berhasil dihapus.');
     }
 }

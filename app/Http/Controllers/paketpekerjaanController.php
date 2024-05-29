@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\doklainnya;
 use App\Models\jadwal;
 use App\Models\jadwalnontender;
+use App\Models\jadwalpenunjukanlangsung;
+use App\Models\jawaban;
 use App\Models\klasifikasi;
 use App\Models\nontender;
 use App\Models\paketpekerjaan;
@@ -13,6 +15,7 @@ use App\Models\tahun;
 use App\Models\kak;
 use App\Models\kontrak;
 use App\Models\metodepengadaan;
+use App\Models\penjelasan;
 use App\Models\rancangankontrak;
 use App\Models\uraianpekerjaan;
 use Illuminate\Http\Request;
@@ -152,15 +155,25 @@ class paketpekerjaanController extends Controller
     {
         $pengadaan = paketpekerjaan::findOrfail($id);
         $jadwal = jadwal::where('id_paket',$pengadaan->id)->get();
-        $jadwalnontender = jadwalnontender::all();
+        if ($pengadaan->hps > 100000000 && $pengadaan->hps <= 500000000) {
+            $jadwalnontender = jadwalpenunjukanlangsung::all();
+        } else {
+            $jadwalnontender = jadwalnontender::all();
+        }
         return view ('jadwal.update',['jadwal' => $jadwal,'pengadaan' => $pengadaan,'jadwalnontender' => $jadwalnontender]);
     }
 
     public function buat($id)
     {
         $pengadaan = paketpekerjaan::findOrfail($id);
-        $jadwal = jadwal::where('id_paket',$pengadaan->id)->first();
-        $jadwalnontender = jadwalnontender::all();
+        $jadwal = jadwal::where('id_paket', $pengadaan->id)->first();
+        if ($pengadaan->hps > 100000000 && $pengadaan->hps <= 500000000) {
+            $jadwalnontender = jadwalpenunjukanlangsung::all();
+        } else {
+            $jadwalnontender = jadwalnontender::all();
+        }
+        
+       
         return view ('jadwal.create',['jadwal' => $jadwal,'pengadaan' => $pengadaan,'jadwalnontender' => $jadwalnontender]);
     }
 
@@ -170,6 +183,33 @@ class paketpekerjaanController extends Controller
         $nontender = nontender::where('id_paket',$pengadaan->id)->first();
         return view ('pengadaan.evaluasi',['pengadaan' => $pengadaan,'nontender' => $nontender]);
     }
+
+    public function aanwizing($id)
+    {
+        $pengadaan = paketpekerjaan::findOrfail($id);
+        $nontender = nontender::where('id_paket',$pengadaan->id)->first();
+        $penjelasan = penjelasan::where('id_paket',$pengadaan->id)->get();
+        $jawaban = jawaban::where('id_paket',$pengadaan->id)->get();
+        return view ('pengadaan.aanwizing',['pengadaan' => $pengadaan,'nontender' => $nontender,'penjelasan' => $penjelasan,'jawaban' => $jawaban]);
+    }
+
+    public function baaanwizing(Request $request,$id)
+    {
+        $pengadaan = paketpekerjaan::findOrfail($id);
+        $nontender = nontender::where('id_paket',$pengadaan->id)->first();
+
+        $request->validate([
+            'baaanwizing' => 'required',
+            'tglaanwizing' => 'required'
+        ]);
+        
+        $nontender->baaanwizing = $request->baaanwizing;
+        $nontender->tglaanwizing = $request->tglaanwizing;
+        $nontender->save();
+
+        return redirect()->back()->with('status','data berhasil disimpan');
+    }
+
 
     public function kontrak($id)
     {

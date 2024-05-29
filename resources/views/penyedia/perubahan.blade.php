@@ -54,7 +54,7 @@
       <tr>
             <td>{{$loop->iteration}}</td>
             <td>{{$p->user->administrasi->badanusaha->nama}}</td>
-            <td><a href="{{route('penyedia.show',[$p->id])}}">{{$p->user->name}}</a></td>
+            <td>{{$p->user->name}}</td>
             <td>@if($p->user->administrasi)
               {{ $p->user->administrasi->npwp }}
           @else
@@ -66,10 +66,12 @@
             <td>
               {{Date::createFromDate($p->created_at)->format('l, j F Y')}}
             </td>
+            
             <td>
               <form action="{{ route('penyedia.terima', ['id' => $p->id_user]) }}" method="post" class="d-inline">
                 @csrf
                 <input type="hidden" name="status" value="verifikasi">
+                <input type="hidden" name="id" value="{{$p->id}}">
                 <input type="hidden" name="konfirmasi" value="tidak">
                 <button type="submit" class="btn btn-primary btn-sm">Proses</button>
             </form>

@@ -46,7 +46,10 @@
                 <form action="{{route('jadwal.store')}}" method="POST">
                     @csrf
                 <table class="table mb-6">
-                  
+                  <tr>
+                    <th class="bg-light">Kode Paket</th>
+                <td colspan="3"><strong>{{$pengadaan->id}}</strong></td>
+                  </tr>
                   <tr>
                       <th class="bg-light">Nama Paket</th>
                   <td colspan="3"><strong>{{$pengadaan->namapaket}}</strong></td>

@@ -157,7 +157,7 @@
                           </div>
                           <div class="grid md:grid-cols-2 md:gap-6">
                             <div class="relative z-0 w-full mb-6 group">
-                                <h3 class="mb-4 text-gray-500 dark:text-white">Kantor Cabang ?</h3>
+                                <h3 class="mb-4 text-gray-500 ">Kantor Cabang ?</h3>
                                 <div class="flex items-center mb-4">
                                     <input id="default-radio-1" type="radio" value="ya" name="kantorcabang" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500  focus:ring-2 ">
                                     <label for="default-radio-1" class="ms-2 ml-2 text-xs font-medium text-gray-500 ">Ya</label>

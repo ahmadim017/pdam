@@ -115,6 +115,7 @@ class penyediaController extends Controller
         $pengajuan = pengajuanpenyedia::findOrfail($id);
         $pengajuan->status = $request->status;
         $pengajuan->save();
+      
         return redirect()->route('penyedia.index')->with('status','data penyedia diterima');
     }
 

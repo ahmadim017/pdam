@@ -41,6 +41,10 @@ class kontrakController extends Controller
     // Gantikan placeholder dengan data dari database
     $templateProcessor->setValue('nosurat', $datas->nosurat);
     $templateProcessor->setValue('tglsurat', \Carbon\Carbon::createFromFormat('Y-m-d', $datas->tglsurat)->format('j F Y'));
+    $templateProcessor->setValue('nosuratpenawaran', $data->nosuratpenawaran);
+    $templateProcessor->setValue('tglsuratpenawaran', \Carbon\Carbon::createFromFormat('Y-m-d', $data->tglsuratpenawaran)->format('j F Y'));
+    $templateProcessor->setValue('baaanwizing', $data->baaanwizing);
+    $templateProcessor->setValue('tglaanwizing', \Carbon\Carbon::createFromFormat('Y-m-d', $data->tglaanwizing)->format('j F Y'));
     $templateProcessor->setValue('nilaikontrak', 'Rp.' . number_format($datas->nilaikontrak, 0, ',', '.'));
     $templateProcessor->setValue('nama_perusahaan', $data->user->name);
     $templateProcessor->setValue('npwp', $data->user->npwp);

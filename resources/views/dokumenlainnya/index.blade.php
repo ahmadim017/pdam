@@ -36,13 +36,15 @@
                     <h1 class="font-semibold text-2xl">Dokumen Lainnya</h1>
                     <hr class="my-4 border-2 border-cyan-700">
 
-                    
+                    @if($pengajuanpenyedia->konfirmasi == 'ya')
+
+                    @else
                     <div class="flex items-center justify-end my-4">
                         <button data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="text-white inline-flex items-center bg-cyan-700 hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
                             <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg> Tambah Dokumen
                         </button>
                     </div>
-                    
+                    @endif
                     <!-- Main modal -->
                     <div id="crud-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                         <div class="relative w-full max-w-6xl max-h-full">
@@ -118,7 +120,7 @@
                                         Dokumen
                                       </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Action
+                                        
                                     </th>
                                 </tr>
                             </thead>
@@ -133,7 +135,9 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 15v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2m-8 1V4m0 12-4-4m4 4 4-4"/>
                                   </svg></a></td>
                                   <td >
-                                    
+                                    @if($pengajuanpenyedia->konfirmasi == 'ya')
+
+                                    @else
                                     <form action="{{route('dokumenlainnya.destroy', [$item->id])}}" onsubmit="return confirm('Apakah Anda Yakin ingin dihapus?')" method="POST">
                                         @csrf
                                         @method('delete')
@@ -141,6 +145,7 @@
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
                                           </svg></button>
                                     </form>
+                                    @endif
                                   </td>
                                  
                              </tr>

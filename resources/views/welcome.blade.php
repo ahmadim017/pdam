@@ -86,12 +86,12 @@
             <!--Right Col-->
             <div class="w-full lg:w-6/12 lg:my-20 lg:ml-6 ml-4 relative">
                       
-              <!--  <img data-aos="fade-up" data-aos-once="true" class="w-10/12 mx-auto 2xl:-mb-20" src="{{asset('tail/img/girl.png')}}" /> -->
+              
               <section class="swiper z-0 mb-16">
                 <div class="swiper-wrapper">
-                 
-                  <div class="swiper-slide"><img class="rounded-xl border-8 border-white"  src="{{asset('public/image/slide.jpg')}}" /></div>
-                  <div class="swiper-slide"><img class="rounded-xl border-8 border-white"  src="{{asset('public/image/slide2.jpg')}}" /></div>
+                 @foreach ($slide as $item)
+                 <div class="swiper-slide"><img class="rounded-xl border-8 border-white"  src="{{asset('storage/app/public/slide/image/'.$item->image)}}" /></div>
+                 @endforeach
                 </div>
                 <div class="swiper-pagination "></div>
               </section>
@@ -134,15 +134,15 @@
             </div>
             <div class="max-w-screen-xl px-8 mx-auto mb-6">
                 <div class="text-center p-6 bg-white w-full rounded-xl space-x-2 mt-10 shadow-lg">
-                    <ul class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800 mb-2">
+                    <ul class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 bg-gray-50  mb-2">
                         <li class="me-2">
                             <button id="about-tab" data-tabs-target="#about" type="button" role="tab" aria-controls="about" aria-selected="true" class="inline-block p-4 text-blue-600 rounded-ss-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-blue-500">Tender</button>
                         </li>
                     </ul>
 
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 ">
                         <tr>
                             <th scope="col" class="px-6 py-3">
                                Nama Paket
@@ -151,124 +151,32 @@
                                 HPS
                             </th>
                             <th scope="col" class="px-6 py-3">
-                               Akhir Pendaftaran
+                               Tahapan
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th scope="row" class="px-6 py-4 font-medium text-wrap text-gray-900 dark:text-white">
+                        <tr class="bg-white border-b  hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <th scope="row" class="px-6 py-4 font-medium text-wrap text-gray-900 ">
                                
-                                <a href="#" class="hover:text-sky-500">Pengadaan Bahan Kimia Kaporit Sebanyak 54.240 Kg Untuk Keperluan Produksi Tahun 2024 Lokasi IPA Bendang Perumdam Tirta Kencana Kota Samarinda</a>
-                               
-                            </th>
-                            <td class="px-6 py-4">
-                                $2999
-                            </td>
-                            <td class="px-6 py-4">
-                                01 Februari 2024
-                            </td>
-                        </tr>
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 text-wrap dark:text-white">
-                              
-                                <a href="#" class="hover:text-sky-500">Pengadaan Bahan Kimia Aluminium Sulfate Sebanyak 325.000 Kg Untuk Keperluan Produksi Tahun 2024 Lokasi IPA Bendang Perumdam Tirta Kencana Kota Samarinda</a>
-                             
-                            </th>
-                            <td class="px-6 py-4">
-                                $1999
-                            </td>
-                            <td class="px-6 py-4">
-                                01 Februari 2024
-                            </td>
-                        </tr>
-                        <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 text-wrap  dark:text-white">
-                                
-                                <a href="#" class="hover:text-sky-500">Pengadaan Bahan Kimia Soda Ash Sebanyak 127.750 Kg Untuk Keperluan Produksi Tahun 2024 Lokasi IPA Bendang Perumdam Tirta Kencana Kota Samarinda</a>
+                                <a href="#" class="hover:text-sky-500"></a>
                                
                             </th>
                             <td class="px-6 py-4">
-                                $99
+                               
                             </td>
-                            <td class="px-6 py-4 ">
-                               01 Februari 2024
+                            <td class="px-6 py-4">
+                               
                             </td>
                         </tr>
+                       
                     </tbody>
                 </table>
             </div>
                 </div>
             </div>
 
-            <div class="max-w-screen-xl px-8 mx-auto mb-6">
-                <div class="text-center p-6 bg-white w-full rounded-xl space-x-2 mt-10 shadow-lg">
-                    <ul class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800 mb-2">
-                        <li class="me-2">
-                            <button id="about-tab" data-tabs-target="#about" type="button" role="tab" aria-controls="about" aria-selected="true" class="inline-block p-4 text-blue-600 rounded-ss-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-blue-500">Non Tender</button>
-                        </li>
-                    </ul>
-
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                               Nama Paket
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                HPS
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                               Akhir Pendaftaran
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th scope="row" class="px-6 py-4 font-medium text-wrap text-gray-900 dark:text-white">
-                               
-                                <a href="#" class="hover:text-sky-500">Pengadaan Bahan Kimia Kaporit Sebanyak 54.240 Kg Untuk Keperluan Produksi Tahun 2024 Lokasi IPA Bendang Perumdam Tirta Kencana Kota Samarinda</a>
-                               
-                            </th>
-                            <td class="px-6 py-4">
-                                $2999
-                            </td>
-                            <td class="px-6 py-4">
-                                01 Februari 2024
-                            </td>
-                        </tr>
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 text-wrap dark:text-white">
-                              
-                                <a href="#" class="hover:text-sky-500">Pengadaan Bahan Kimia Aluminium Sulfate Sebanyak 325.000 Kg Untuk Keperluan Produksi Tahun 2024 Lokasi IPA Bendang Perumdam Tirta Kencana Kota Samarinda</a>
-                             
-                            </th>
-                            <td class="px-6 py-4">
-                                $1999
-                            </td>
-                            <td class="px-6 py-4">
-                                01 Februari 2024
-                            </td>
-                        </tr>
-                        <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 text-wrap  dark:text-white">
-                                
-                                <a href="#" class="hover:text-sky-500">Pengadaan Bahan Kimia Soda Ash Sebanyak 127.750 Kg Untuk Keperluan Produksi Tahun 2024 Lokasi IPA Bendang Perumdam Tirta Kencana Kota Samarinda</a>
-                               
-                            </th>
-                            <td class="px-6 py-4">
-                                $99
-                            </td>
-                            <td class="px-6 py-4 ">
-                               01 Februari 2024
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-                </div>
-            </div>
+           
         </section>
         
 

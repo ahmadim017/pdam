@@ -20,15 +20,18 @@ use App\Http\Controllers\pengajuanpenyediaController;
 use App\Http\Controllers\pengalamanController;
 use App\Http\Controllers\pengesahanController;
 use App\Http\Controllers\pengurusperusahaanController;
+use App\Http\Controllers\penjelasanController;
 use App\Http\Controllers\penyediaController;
 use App\Http\Controllers\perlengkapanController;
 use App\Http\Controllers\rancangankontrakController;
 use App\Http\Controllers\slideController;
 use App\Http\Controllers\suratpernyataanController;
 use App\Http\Controllers\tenagaahliController;
+use App\Http\Controllers\tenderController;
 use App\Http\Controllers\uraianpekerjaanController;
 use App\Http\Controllers\userController;
 use App\Http\Controllers\userdashboardController;
+use App\Http\Controllers\welcomeController;
 use App\Models\nontender;
 use App\Models\pengajuanpenyedia;
 use Illuminate\Support\Facades\Route;
@@ -44,13 +47,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+Route::get('/', [welcomeController::class, 'index'])->name('welcome');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'role:ADMIN'])->name('dashboard');
+})->middleware(['auth', 'role:ADMIN,VERIFIKATOR'])->name('dashboard');
 
 Route::get('/verifikator', function () {
     return view('verifikator');
@@ -99,6 +101,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/get-kabupaten/{id}', [administrasiController::class, 'getKabupaten']);
 
+    Route::get('/penjelasan/{id}', [nontenderController::class, 'penjelasan'])->name('paketbaru.penjelasan');
+
     Route::get('/password',[passwordController::class, 'password'])->name('user.password');
 
     Route::patch('password',[passwordController::class, 'gantipassword'])->name('user.gantipassword');
@@ -110,22 +114,25 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/perbaikan',[pengajuanpenyediaController::class, 'perbaikan'])->name('verifikasi.perbaikan');
 
     Route::post('/perubahan/simpan',[pengajuanpenyediaController::class, 'simpan'])->name('perubahan.simpan');
+
+    Route::post('/pertanyaan',[penjelasanController::class, 'store'])->name('pertanyaan.store');
+
+    Route::get('/dataperuhsaan', function(){
+        return view('dataperusahaan.index');
+    })->name('dataperusahaan');
 });
 
-route::get('/dataperusahaan', function(){
-    return view('dataperusahaan.index');
-})->middleware(['auth', 'role:USER'])->name('dataperusahaan');
 
 
-Route::middleware(['auth', 'role:ADMIN'])->group(function () {
-   
+
+
+Route::middleware(['auth', 'role:VERIFIKATOR,ADMIN'])->group(function () {
+
     Route::resource('slide', slideController::class);
-    Route::resource('penyedia', penyediaController::class);
     route::resource('user', userController::class)->only(['index', 'create', 'store', 'destroy','edit','update']);
     route::get('/daftar/user', [userController::class, 'daftar'])->name('user.daftar');
-});
 
-Route::middleware(['auth', 'role:VERIFIKATOR'])->group(function () {
+
     Route::resource('penyedia', penyediaController::class);
     Route::get('/perubahan/penyedia/', [penyediaController::class,'perubahan'])->name('penyedia.perubahan');
     Route::post('/terima/penyedia/{id}', [pengajuanpenyediaController::class, 'terima'])->name('penyedia.terima');
@@ -137,6 +144,10 @@ Route::middleware(['auth', 'role:VERIFIKATOR'])->group(function () {
     route::resource('uraianpekerjaan', uraianpekerjaanController::class);
     route::resource('doklainnya', doklainnyaController::class);
     route::resource('kontrak',kontrakController::class);
+    route::resource('tender', tenderController::class);
+
+    route::get('/tender/jadwal/{id}',[tenderController::class,'buat'])->name('jadwaltender.buat');
+    route::get('/tender/view/jadwal/{id}',[tenderController::class,'view'])->name('jadwaltender.view');
    // route::post('/pengadaan/penyedia/{id}',[paketpekerjaanController::class,'hapus'])->name('penyedia.hapus');
     route::get('/pengadaan/jadwal/{id}',[paketpekerjaanController::class,'buat'])->name('jadwal.buat');
     route::get('/pengadaan/belumadajadwal/{id}',[paketpekerjaanController::class,'view'])->name('jadwal.view');
@@ -145,7 +156,10 @@ Route::middleware(['auth', 'role:VERIFIKATOR'])->group(function () {
     route::get('/pengadaan/kontrak/{id}',[paketpekerjaanController::class,'kontrak'])->name('pengadaan.kontrak');
     Route::get('/undangan/{id}/cetak', [nontenderController::class, 'cetak'])->name('nontender.cetak');
     Route::post('/nontender/{id}/evaluasi', [nontenderController::class, 'evaluasi'])->name('nontender.evaluasi');
-    
+    Route::get('/pengadaan/aanwizing/{id}',[paketpekerjaanController::class,'aanwizing'])->name('pengadaan.aanwizing');
+    Route::post('/nontender/jawab', [nontenderController::class, 'jawab'])->name('nontender.jawab');
+    Route::put('/pengadaan/aanwizing/{id}', [paketpekerjaanController::class,'baaanwizing'])->name('baaanwizing.simpan');
+    Route::get('/baaanwizing/{id}/cetak', [nontenderController::class, 'baaanwizing'])->name('baaanwizing.cetak');
     Route::get('/kontrak/{id}/cetak', [kontrakController::class, 'cetak'])->name('kontrak.cetak');
     
 });

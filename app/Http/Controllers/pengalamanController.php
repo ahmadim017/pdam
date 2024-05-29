@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\pengajuanpenyedia;
 use App\Models\pengalaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,8 @@ class pengalamanController extends Controller
     public function index()
     {
         $pengalaman = pengalaman::where('id_user', Auth::user()->id)->get();
-        return view('pengalaman.index',['pengalaman' => $pengalaman]);
+        $pengajuanpenyedia = pengajuanpenyedia::where('id_user', Auth::user()->id)->first();
+        return view('pengalaman.index',['pengalaman' => $pengalaman,'pengajuanpenyedia' => $pengajuanpenyedia]);
     }
 
     /**

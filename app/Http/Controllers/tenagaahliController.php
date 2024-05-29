@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\pengajuanpenyedia;
 use App\Models\tenagaahli;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,11 @@ class tenagaahliController extends Controller
     public function index()
     {
         $tenagaahli = tenagaahli::where('id_user',Auth::user()->id)->get();
-        return view('tenagaahli.index',['tenagaahli' => $tenagaahli]);
+        $pengajuanpenyedia = pengajuanpenyedia::where('id_user', Auth::user()->id)->first();
+        return view('tenagaahli.index',[
+        'tenagaahli' => $tenagaahli,
+        'pengajuanpenyedia' => $pengajuanpenyedia
+    ]);
     }
 
     /**

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class nontender extends Model
 {
     use HasFactory;
-    protected $fillable = ['id_paket','id_user','created_by','metodepengadaan','nosurat'];
+    protected $fillable = ['id_paket','tglsurat','id_user','created_by','metodepengadaan','nosurat','nosuratpenawaran','tglsuratpenawaran'];
 
     public function user()
     {
