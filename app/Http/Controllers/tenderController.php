@@ -273,6 +273,31 @@ class tenderController extends Controller
         return $pdf->stream();
     }
 
+    public function bapenetapan($id)
+    {
+        Date::setlocale('id');
+        Config::set('terbilang.locale', 'id');
+        $pengadaan = tender::findOrfail($id);
+        $detailtender= detailtender::where('id_paket',$pengadaan->id)->first();
+        $prosestender = prosestender::where('id_paket',$pengadaan->id)->where('id_user', $detailtender->id_user)->first();
+        $hargapenawaran = Terbilang::make($prosestender->hargapenawaran , ' rupiah');
+        $harganegoisasi = Terbilang::make($detailtender->hasilnegoisasi, ' rupiah');
+        $penawarCount = prosestender::where('id_paket', $pengadaan->id)
+                            ->whereNotNull('hargapenawaran')
+                            ->where('hargapenawaran', '!=', 0)
+                            ->count();
+        //dd($penawarCount);
+
+        $pdf = PDF::loadview('tender.bapenetapan',[
+            'prosestender' => $prosestender,
+            'detailtender' => $detailtender,
+            'hargapenawaran' => $hargapenawaran,
+            'harganegoisasi' => $harganegoisasi,
+            'penawarCount' => $penawarCount
+        ]);
+        return $pdf->stream();
+    }
+
     public function pembukaan($id)
     {
         $pengadaan = tender::findOrfail($id);
@@ -309,6 +334,23 @@ class tenderController extends Controller
             'prosestender' => $prosestender,
             'detailtender' => $detailtender,
             'evaluasiakhir' => $evaluasiakhir]);
+    }
+
+    public function penetapan($id)
+    {
+        $pengadaan = tender::findOrfail($id);
+       
+        $detailtender = detailtender::where('id_paket',$pengadaan->id)->first();
+        $evaluasiakhir = evaluasiakhir::where('id_paket',$pengadaan->id)->orderBy('nilaiakhir','desc')->first();
+        $prosestender = prosestender::where('id_paket',$pengadaan->id)->where('id_user',$evaluasiakhir->id_user)->first();
+       
+        return view ('tender.penetapan',[
+            'pengadaan' => $pengadaan,
+            'prosestender' => $prosestender,
+            'detailtender' => $detailtender,
+            'evaluasiakhir' => $evaluasiakhir,
+
+        ]);
     }
 
     public function klarifikasi($id)

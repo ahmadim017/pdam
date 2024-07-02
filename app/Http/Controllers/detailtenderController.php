@@ -250,6 +250,22 @@ class detailtenderController extends Controller
         return redirect()->back()->with('status','Pengumuman Pemenanang berhasil disimpan');
     }
 
+    public function bapenetapan(Request $request, $id)
+    {
+        $request->validate([
+            'bapenetapan' => 'required',
+            'tglpenetapan' => 'required',
+        ], [
+            'required' => 'Pastikan isian tidak kosong',
+        ]);
+
+        $detailtender = detailtender::where('id_paket', $id)->first();
+        $detailtender->bapenetapan = $request->bapenetapan;
+        $detailtender->tglpenetapan = $request->tglpenetapan;
+        $detailtender->save();
+        return redirect()->back()->with('status','Penetapan Pemenanang berhasil disimpan');
+    }
+
     
     /**
      * Remove the specified resource from storage.

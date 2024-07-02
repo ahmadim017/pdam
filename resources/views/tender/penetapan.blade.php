@@ -57,18 +57,16 @@ $(document).ready(function() {
         <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('tender.negoisasi',[$pengadaan->id])}}">Negoisasi Teknis dan Biaya</a></li>
        
         <li class="breadcrumb-item text-secondary" aria-current="page"><a href="#">Pengumuman Pemenang</a></li>
-        <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('tender.penetapan',[$pengadaan->id])}}">Penetapan Pemenang</a></li>
       
       </ol>
     </nav>
   </div>
 </div>
-
 <div class="col-md-12">
   <div class="card shadow mb-4">
       <!-- Card Header - Accordion -->
       <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
-        <h6 class="m-0 font-weight-bold text-primary">Pengumuman Pemenang</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Penetapan Pemenang</h6>
       </a>
       @if(session('status'))
       <div class="alert alert-success">
@@ -118,31 +116,31 @@ $(document).ready(function() {
     <th class="bg-light">Harga Penawaran</th>
     <td><strong>Rp. {{number_format($prosestender->hargapenawaran)}}</strong></td>
 </tr>
-<form id="formnegoisasi" action="{{route('detailtender.bapengumumanpemenang',[$pengadaan->id])}}" method="POST">
+<form id="formnegoisasi" action="{{route('detailtender.bapenetapan',[$pengadaan->id])}}" method="POST">
 @csrf
 
 
 <tr>
-  <th class="bg-light">No Surat Pengumuman Pemenang</th>
-  <td><strong><input type="text" name="bapengumumanpemenang" value="{{ old('bapengumumanpemenang', $detailtender->bapengumumanpemenang ?? '') }}" class="form-control {{$errors->first('bapengumumanpemenang') ? "is-invalid" : ""}}"></strong></td>
+  <th class="bg-light">No Surat Penetapan Pemenang</th>
+  <td><strong><input type="text" name="bapenetapan" value="{{ old('bapenetapan', $detailtender->bapenetapan ?? '') }}" class="form-control {{$errors->first('bapenetapan') ? "is-invalid" : ""}}"></strong></td>
   <div class="invalid-feedbeck">
-            <span class="text-danger">{{$errors->first('bapengumumanpemenang')}}</span>
+            <span class="text-danger">{{$errors->first('bapenetapan')}}</span>
           </div></td>
 </tr>
 <tr>
   <th class="bg-light">Tanggal Surat</th>
-  <td><strong><input type="date" name="tglpengumuman" value="{{ old('tglpengumuman', $detailtender->tglpengumuman ?? '') }}" class="form-control {{$errors->first('tglpengumuman') ? "is-invalid" : ""}}"></strong></td>
+  <td><strong><input type="date" name="tglpenetapan" value="{{ old('tglpenetapan', $detailtender->tglpenetapan ?? '') }}" class="form-control {{$errors->first('tglpenetapan') ? "is-invalid" : ""}}"></strong></td>
   <div class="invalid-feedbeck">
-            <span class="text-danger">{{$errors->first('tglpengumuman')}}</span>
+            <span class="text-danger">{{$errors->first('tglpenetapan')}}</span>
           </div>
 </tr>
 </form>
-@if(optional($detailtender)->bapengumumanpemenang)
+@if(optional($detailtender)->bapenetapan)
 <tr>
-  <th class="bg-light">Dokumen Pengumuman Pemenang</th>
+  <th class="bg-light">Dokumen Penetapan Pemenang</th>
   <td>
    
-    <a href="{{route('tender.bapengumumanpemenang',[$pengadaan->id])}}" target="_blank" class="btn btn-success btn-sm mr-2">Dokumen Surat Pengumuman Pemenang</a>
+    <a href="{{route('tender.bapenetapan',[$pengadaan->id])}}" target="_blank" class="btn btn-success btn-sm mr-2">Dokumen Surat Penetapan Pemenang</a>
       
   </td>
 </tr>
@@ -152,7 +150,7 @@ $(document).ready(function() {
 </div>
 
 @if(Auth::user()->role == 'VERIFIKATOR')
-@if(optional($detailtender)->bapengumumanpemenang)
+@if(optional($detailtender)->bapenetapan)
 <button type="submit" id="banegoisasi" class="btn btn-secondary btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
   <path d="M11 2H9v3h2z"/>
   <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
