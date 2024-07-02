@@ -97,4 +97,13 @@ class User extends Authenticatable
     {
         return $this->hasOne(penjelasan::class, 'id_user');
     }
+    public function evaluasiakhir()
+    {
+        return $this->hasOne(evaluasiakhir::class, 'id_user');
+    }
+
+    public function prosestender()
+    {
+        return $this->hasOne(prosestender::class, 'id_user');
+    }
 }

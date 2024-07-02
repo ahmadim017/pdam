@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\detailtender;
 use App\Models\doklainnya;
 use App\Models\jadwal;
-use App\Models\jadwalnontender;
+
 use App\Models\kak;
 use App\Models\nontender;
+use App\Models\prosestender;
 use App\Models\rancangankontrak;
 use App\Models\uraianpekerjaan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Jenssegers\Date\Date;
 
 class paketbaruController extends Controller
@@ -23,7 +26,15 @@ class paketbaruController extends Controller
     {
         Date::setLocale('id');
         $jadwal = jadwal::all();
-        return view('paketbaru.index',['jadwal' => $jadwal]);
+        $detailtender = detailtender::where('jenistender','terbuka');
+        $prosestender = prosestender::where('id_user',Auth::user()->id)->firstOrfail();
+       
+        $nontender = nontender::where('id_user', Auth::user()->id)->where('status','Verifikasi')->get();
+     
+        $detailtender = detailtender::all();
+      
+
+        return view('paketbaru.index',['jadwal' => $jadwal,'detailtender' => $detailtender,'prosestender' => $prosestender,'nontender' => $nontender]);
     }
 
     /**
@@ -57,6 +68,7 @@ class paketbaruController extends Controller
     {
         
         $nontender = nontender::where('id_paket',$id)->firstOrFail();
+        $detailtender = detailtender::all();
         $kak = kak::where('id_paket',$nontender->id_paket)->get();
         $rancangankontrak = rancangankontrak::where('id_paket',$nontender->id_paket)->get();
         $uraianpekerjaan = uraianpekerjaan::where('id_paket',$nontender->id_paket)->get();
@@ -69,6 +81,28 @@ class paketbaruController extends Controller
             'rancangankontrak'  => $rancangankontrak,
             'uraianpekerjaan' => $uraianpekerjaan,
             'doklainnya' => $doklainnya,
+            'detailtender' => $detailtender,
+        ]);
+    }
+
+    public function detail($id)
+    {
+        
+        $nontender = nontender::where('id_paket',$id)->firstOrFail();
+        $detailtender = detailtender::all();
+        $kak = kak::where('id_paket',$nontender->id_paket)->get();
+        $rancangankontrak = rancangankontrak::where('id_paket',$nontender->id_paket)->get();
+        $uraianpekerjaan = uraianpekerjaan::where('id_paket',$nontender->id_paket)->get();
+        $doklainnya = doklainnya::where('id_paket',$nontender->id_paket)->get();
+        $jadwal = jadwal::all();
+        return view('paketbaru.show',[
+            'nontender' => $nontender,
+            'jadwal' => $jadwal,
+            'kak' => $kak,
+            'rancangankontrak'  => $rancangankontrak,
+            'uraianpekerjaan' => $uraianpekerjaan,
+            'doklainnya' => $doklainnya,
+            'detailtender' => $detailtender,
         ]);
     }
 

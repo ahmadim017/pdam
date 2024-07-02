@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class persyaratanevaluasiteknis extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'id_paket',
+        'id_user',
+        'id_evaluasiteknis',
+        'bobot',
+        'status',
+    ];
+}

@@ -1,20 +1,41 @@
 @extends('layouts.sbadmin')
 
+
 @section('footer')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap 4 JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <!-- Inisialisasi Select2 -->
 <script type="text/javascript">
     $(document).ready(function() {
         $('#id_user').select2({
             placeholder: 'Pilih Daftar Penyedia',
-            allowClear: true
+            allowClear: true,
+            width: '100%'
         });
-    });
+    
+
+      // Fungsi untuk menampilkan atau menyembunyikan daftar penyedia
+      function toggleDaftarPenyedia() {
+          if ($('#jenis_tender').val() == 'tertutup') {
+              $('#daftar_penyedia').show();
+          } else {
+              $('#daftar_penyedia').hide();
+          }
+      }
+
+      // Panggil fungsi saat halaman dimuat untuk set awal
+      toggleDaftarPenyedia();
+
+      // Panggil fungsi saat nilai dropdown berubah
+      $('#jenis_tender').change(function() {
+          toggleDaftarPenyedia();
+      });
+  });
 </script>
-   
+
 <script type="text/javascript">
       $(document).ready(function() {
     $('#uploadButton').click(function() {
@@ -61,25 +82,26 @@ $(document).ready(function() {
    
 });
 
-$('#jenis_tender').change(function() {
-            var daftarPenyediaRow = $('#daftar_penyedia');
-            if ($(this).val() === 'tertutup') {
-                daftarPenyediaRow.removeClass('hidden');
-            } else {
-                daftarPenyediaRow.addClass('hidden');
-            }
-        });
 
 
     </script>
 
   
 @endsection
+
+
 @section('header')
+<!-- Bootstrap 4 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+<!-- Select2 CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap4-theme/1.0.0-beta.1/select2-bootstrap4.min.css" rel="stylesheet" />
+
 <style>
-.hidden {
-    display: none;
-}
+  #daftar_penyedia {
+      display: none;
+  }
 </style>
 @endsection
 @section('content')
@@ -88,19 +110,16 @@ $('#jenis_tender').change(function() {
   <div class="col">
     <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
       <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a href="{{route('pengadaan.index')}}">Daftar Paket</a></li>
+        <li class="breadcrumb-item"><a href="{{route('tender.index')}}">Daftar Paket</a></li>
         <li class="breadcrumb-item text-secondary" aria-current="page"><a href="#">Detail Paket</a></li>
-        <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('pengadaan.aanwizing',[$pengadaan->id])}}">Pemberian Penjelasan</a></li>
-        @if(optional($nontender)->hargapenawaran)
-        <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('pengadaan.evaluasi',[$pengadaan->id])}}">Evaluasi</a></li>
-        @else
-        
-        @endif
-        @if(optional($nontender)->hargapenawaran)
-        <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('pengadaan.kontrak',[$pengadaan->id])}}">Buat Kontrak</a></li>
-        @else
-        
-        @endif
+        <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('tender.aanwizing',[$pengadaan->id])}}">Pemberian Penjelasan</a></li>
+        <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('tender.pembukaan',[$pengadaan->id])}}">Pembukaan Penawaran</a></li>
+        <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('tender.evaluasi',[$pengadaan->id])}}">Evaluasi</a></li>
+        <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('tender.klarifikasi',[$pengadaan->id])}}">Klarifikasi dan Verifikasi</a></li>
+        <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('tender.negoisasi',[$pengadaan->id])}}">Negoisasi Teknis dan Biaya</a></li>
+       
+        <li class="breadcrumb-item text-secondary" aria-current="page"><a href="#">Pengumuman Pemenang</a></li>
+       
       </ol>
     </nav>
   </div>
@@ -474,7 +493,7 @@ $('#jenis_tender').change(function() {
     
   </td>
 </tr>
-<form action="{{route('nontender.store')}}" id="uploadForm4" method="POST">
+<form action="{{route('detailtender.store')}}" id="uploadForm4" method="POST">
   @csrf
   <input type="hidden" value="{{$pengadaan->id}}" name="id_paket">
 <tr >
@@ -484,8 +503,8 @@ $('#jenis_tender').change(function() {
      <select name="metodepengadaan" class="form-control  {{$errors->first('id_user') ? "is-invalid" : ""}}" style="width: 50%;">
                 <option value=""></option>
                 @foreach ($metodepengadaan as $item)
-                @if($nontender)
-                <option @if($nontender->metodepengadaan == $item->nama) selected @endif value="{{$item->nama}}">{{$item->nama}}</option>   
+                @if($detailtender)
+                <option @if($detailtender->metodepengadaan == $item->nama) selected @endif value="{{$item->nama}}">{{$item->nama}}</option>   
                 @else
                 
                 <option value="{{$item->nama}}">{{$item->nama}}</option>   
@@ -502,32 +521,50 @@ $('#jenis_tender').change(function() {
 <tr>
   <th class="bg-light">Jenis Tender</th>
   <td>
-      <select name="jenis_tender" id="jenis_tender" class="form-control">
+      <select name="jenistender" id="jenis_tender" class="form-control">
+        @isset($detailtender)
+          <option @if($detailtender->jenistender == 'terbuka') selected @endif value="terbuka">Terbuka</option>
+          <option @if($detailtender->jenistender == 'tertutup') selected @endif value="tertutup">Tertutup</option>
+        @else
           <option value="terbuka">Terbuka</option>
           <option value="tertutup">Tertutup</option>
+        @endisset
       </select>
   </td>
 </tr>
 
-<!-- Daftar Penyedia (Initially Hidden) -->
-<tr id="daftar_penyedia" class="hidden">
+<tr id="daftar_penyedia">
   <th class="bg-light">Daftar Penyedia</th>
+ 
+
+
   <td>
-      <select name="id_user[]" id="id_user" class="form-control {{$errors->first('id_user') ? 'is-invalid' : ''}}" multiple>
-          <option value=""></option>
-          @foreach ($pengajuan as $item)
-              @if($nontender)
-                  <option @if(in_array($item->id_user, $nontender->id_user)) selected @endif value="{{ $item->id_user }}">{{ $item->user->name }} | {{ $item->user->npwp }}</option>
-              @else
-                  <option value="{{ $item->id_user }}">{{ $item->user->name }} | {{ $item->user->npwp }}</option>
-              @endif
-          @endforeach
+    <div class="input-group control-group increment">
+      <select name="id_user[]" id="id_user" class="form-control" multiple>
+        <option value="">Pilih Daftar Penyedia</option>
+        @if ($prosestender)
+        @foreach ($prosestender as $i)
+            @foreach ($pengajuan as $item)
+            <option value="{{ $item->id_user }}" @if($item->id_user == $i->id_user) selected @endif>{{ $item->user->name }} | {{ $item->user->npwp }}</option>
+            @endforeach
+        @endforeach
+       
+        @else
+        @foreach ($pengajuan as $item)
+            <option value="{{ $item->id_user }}">{{ $item->user->name }} | {{ $item->user->npwp }}</option>
+        @endforeach
+        @endif
       </select>
-      <div class="invalid-feedback">
-          <span class="text-danger">{{ $errors->first('id_user') }}</span>
-      </div>
+    
+    </div>
+   
+    <div class="invalid-feedback">
+        <span class="text-danger">{{ $errors->first('id_user') }}</span>
+    </div>
   </td>
+ 
 </tr>
+
 
 
 </form>
@@ -535,9 +572,8 @@ $('#jenis_tender').change(function() {
 </div>
 
 @if(Auth::user()->role == 'VERIFIKATOR')
-@if(optional($nontender)->status == 'Diterima')
-<div></div>
-@elseif($nontender)
+
+@if($detailtender)
 <button type="submit" id="uploadButton4" class="btn btn-secondary btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
   <path d="M11 2H9v3h2z"/>
   <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
@@ -549,7 +585,8 @@ $('#jenis_tender').change(function() {
 </svg> Simpan dan Buat Paket</button>
 @endif
 @endif
-<a href="{{route('pengadaan.index')}}" class="btn btn-primary btn-sm"><i class="fa fa-arrow-circle-left fa-fw fa-sm"></i>Kembali</a>
+
+<a href="{{route('tender.index')}}" class="btn btn-primary btn-sm"><i class="fa fa-arrow-circle-left fa-fw fa-sm"></i>Kembali</a>
         </div>
       </div>
   

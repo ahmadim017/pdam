@@ -156,20 +156,40 @@
                         </tr>
                     </thead>
                     <tbody>
+                      @foreach ($detailtender as $item)
+                          
+                     
                         <tr class="bg-white border-b  hover:bg-gray-50 dark:hover:bg-gray-600">
                             <th scope="row" class="px-6 py-4 font-medium text-wrap text-gray-900 ">
                                
-                                <a href="#" class="hover:text-sky-500"></a>
+                                <a href="#" target="_blank" class="text-blue-500 hover:underline">{{$item->tender->namapaket}}</a>
                                
                             </th>
                             <td class="px-6 py-4">
-                               
+                               Rp. {{number_format($item->tender->hps)}}
                             </td>
                             <td class="px-6 py-4">
-                               
+                              @php
+                              $hasTodaySchedule = false;
+                              foreach ($jadwal as $a) {
+                                  // Mengambil tanggal jadwal
+                                  $jadwalDate = \Carbon\Carbon::parse($a->tglpelaksanaan)->toDateString();
+                      
+                                  // Bandingkan tanggal jadwal dengan tanggal hari ini
+                                  if ($item->id_paket == $a->id_paket && $jadwalDate == now()->toDateString()) {
+                                      $hasTodaySchedule = true;
+                                      break;
+                                  }
+                              }
+                          @endphp
+                              @if ($hasTodaySchedule)
+                              <a data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="text-blue-500 hover:underline">
+                                  {{$a->kegiatan}}
+                              </a>
+                              @endif
                             </td>
                         </tr>
-                       
+                        @endforeach
                     </tbody>
                 </table>
             </div>

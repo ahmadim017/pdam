@@ -23,7 +23,16 @@
    
 });
 </script>
+<script>
+$(document).ready(function() {
+    $('#uploadButton1').click(function() {
+        // Memanggil submit form ketika tombol Upload ditekan
+        $('#uploadForm1').submit();
+    });
 
+   
+});
+    </script>
 <script>
     function toggleAnswerForm(button) {
         var answerForm = button.nextElementSibling;
@@ -42,19 +51,15 @@
   <div class="col">
     <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
         <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="{{route('pengadaan.index')}}">Daftar Paket</a></li>
-            <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('pengadaan.show',[$pengadaan->id])}}">Detail Paket</a></li>
+            <li class="breadcrumb-item"><a href="{{route('tender.index')}}">Daftar Paket</a></li>
+            <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('tender.show',[$pengadaan->id])}}">Detail Paket</a></li>
             <li class="breadcrumb-item text-secondary" aria-current="page"><a href="#">Pemberian Penjelasan</a></li>
-            @if(optional($nontender)->hargapenawaran)
-            <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('pengadaan.evaluasi',[$pengadaan->id])}}">Evaluasi</a></li>
-            @else
-            
-            @endif
-            @if(optional($nontender)->hargapenawaran)
-            <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('pengadaan.kontrak',[$pengadaan->id])}}">Buat Kontrak</a></li>
-            @else
-            
-            @endif
+            <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('tender.pembukaan',[$pengadaan->id])}}">Pembukaan Penawaran</a></li>
+            <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('tender.evaluasi',[$pengadaan->id])}}">Evaluasi</a></li>
+            <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('tender.klarifikasi',[$pengadaan->id])}}">Klarifikasi dan Verifikasi</a></li>
+            <li class="breadcrumb-item text-secondary" aria-current="page"><a href="{{route('tender.negoisasi',[$pengadaan->id])}}">Negoisasi Teknis dan Biaya</a></li>
+            <li class="breadcrumb-item text-secondary" aria-current="page"><a href="#">Pengumuman Pemenang</a></li>
+          
     </nav>
   </div>
 </div>
@@ -63,7 +68,7 @@
   <div class="card shadow mb-4">
       <!-- Card Header - Accordion -->
       <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
-        <h6 class="m-0 font-weight-bold text-primary">Detail Paket</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Aanwizing</h6>
       </a>
       @if(session('status'))
       <div class="alert alert-success">
@@ -92,12 +97,12 @@
       <th class="bg-light">Tahun Anggaran</th>
   <td><strong>{{$pengadaan->tahunanggaran}}</strong></td>
   </tr>
-  <form id="Form" action="{{route('baaanwizing.simpan',[$pengadaan->id])}}" method="POST">
+  <form id="uploadForm1" action="{{route('detailtender.baaanwizing',[$pengadaan->id])}}" method="POST">
     @csrf
-    @method('PUT')
+    
   <tr>
     <th class="bg-light">No. Berita Acara Penjelasan Pekerjaan</th>
-    <td><input type="text" name="baaanwizing" value="{{ old('baaanwizing', $nontender->baaanwizing ?? '') }}" class="form-control {{$errors->first('baaanwizing') ? "is-invalid" : ""}}">
+    <td><input type="text" name="baaanwizing"  class="form-control" value="{{ old('baaanwizing', $detailtender->baaanwizing ?? '') }}">
         <div class="invalid-feedbeck">
             <span class="text-danger">{{$errors->first('baaanwizing')}}</span>
           </div>
@@ -105,34 +110,42 @@
   </tr>
   <tr>
     <th class="bg-light">Tanggal Berita Acara Penjelasan Pekerjaan</th>
-    <td><input type="date" name="tglaanwizing" value="{{ old('tglaanwizing', $nontender->tglaanwizing ?? '') }}" class="form-control {{$errors->first('tglaanwizing') ? "is-invalid" : ""}}">
+    <td><input type="date" name="tglaanwizing" class="form-control" value="{{ old('tglaanwizing', $detailtender->tglaanwizing ?? '') }}">
         <div class="invalid-feedbeck">
             <span class="text-danger">{{$errors->first('tglaanwizing')}}</span>
           </div>
     </td>
   </tr>
 </form>
-@if(optional($nontender)->baaanwizing)
+@if(optional($detailtender)->baaanwizing)
 <tr>
   <th class="bg-light">Dokumen BA Pemberian Penjelasan</th>
   <td>
    
-    <a href="{{route('baaanwizing.cetak',[$pengadaan->id])}}" target="_blank" class="btn btn-success btn-sm mr-2">Dokumen BA Pemberian Penjelasan</a>
+    <a href="{{route('tender.baaanwizing',[$pengadaan->id])}}" target="_blank" class="btn btn-success btn-sm mr-2">Dokumen BA Pemberian Penjelasan</a>
       
   </td>
 </tr>
 @endif
+
 </table>
 
 </div>
 <div class="col-md-12 mb-4">
   @if(Auth::user()->role =='VERIFIKATOR')
-    <button type="submit" id="form" class="btn btn-secondary btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+  @if(optional($detailtender)->baaanwizing)
+    <button type="submit" id="uploadButton1" class="btn btn-secondary btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+        <path d="M11 2H9v3h2z"/>
+        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+      </svg> Update</button>
+  @else
+  <button type="submit" id="uploadButton1" class="btn btn-primary btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
         <path d="M11 2H9v3h2z"/>
         <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
       </svg> Simpan</button>
   @endif
-    <a href="{{route('pengadaan.index')}}" class="btn btn-primary btn-sm"><i class="fa fa-arrow-circle-left fa-fw fa-sm"></i>Kembali</a>
+  @endif
+    <a href="{{route('tender.show',[$pengadaan->id])}}" class="btn btn-primary btn-sm"><i class="fa fa-arrow-circle-left fa-fw fa-sm"></i>Kembali</a>
     </div>  
 </div>
 </div>

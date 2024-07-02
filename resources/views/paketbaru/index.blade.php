@@ -5,7 +5,13 @@
       @php
       $userId = Auth::user()->id; // ID pengguna yang sedang masuk
       $nontender = \App\Models\nontender::where('id_user', $userId)->where('status','Verifikasi')->get();
-       
+     
+      Date::setLocale('id');
+        $jadwal = \App\Models\jadwal::all();
+        $detailtender = \App\Models\detailtender::where('jenistender','terbuka')->get();
+        $detailtendertutup = \App\Models\detailtender::where('jenistender','tertutup')->get();
+        $prosestender = \App\Models\prosestender::where('id_user',Auth::user()->id)->first();
+        
       @endphp
 
 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6">
@@ -22,6 +28,252 @@
      
           </div>
   </div>
+
+  @if($prosestender)
+  <div class="py-3">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg">
+            <div class="p-6 bg-white border-b border-gray-200">
+                <h1 class="font-semibold text-2xl">Tender Tertutup</h1>
+                <hr class="my-4 border-2 border-cyan-700">
+              <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                #
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Nama Paket
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Hps
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Jenis Pekerjaan
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Akhir Pendaftaran
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+  
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      @foreach ($detailtendertutup as $item)
+                      <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                         
+                       <td class="px-6 py-4">{{$loop->iteration}}</td> 
+                       <td class="px-6 py-4">
+                          @if($prosestender)
+                          <a href="{{route('prosestender.show',[$prosestender->id])}}" class="text-blue-500 hover:underline"> {{$item->tender->namapaket}}</a>
+                         
+                          @else
+                          <a data-modal-target="crud-modalt-{{$item->id}}" data-modal-toggle="crud-modalt-{{$item->id}}" class="text-blue-500 hover:underline">
+                              {{$item->tender->namapaket}}</a>
+                          @endif
+                          <div id="crud-modalt-{{$item->id}}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                              <div class="relative w-full max-w-6xl max-h-full">
+                                  <!-- Modal content -->
+                                  <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                      <!-- Modal header -->
+                                      <div class="bg-gray-50 flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                              Pendaftaran Tender
+                                          </h3>
+                                          <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modalt-{{$item->id}}">
+                                              <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                              </svg>
+                                              <span class="sr-only">Close modal</span>
+                                          </button>
+                                      </div>
+                                    
+                                          <form action="{{route('prosestender.store')}}" onsubmit="return confirm('Apakah Anda Yakin dengan penawaran Anda?')" method="POST" enctype="multipart/form-data">
+                                              @csrf
+                                             <input type="hidden" name="id_paket" value="{{$item->tender->id}}">
+                                       
+                                              <div class="py-3">
+                                                  <div class="max-w-7xl mx-auto sm:px-3 lg:px-3">
+                                                     
+                                                          <div class="p-6 bg-white ">
+                                                             
+                                                              <table class="w-full text-sm text-left rtl:text-right text-gray-500 0 mt-6">
+                                                                  <tr class="border-b">
+                                                                      <th scope="col" class="px-6 py-3 bg-gray-100">
+                                                                         Id Paket
+                                                                      </th>
+                                                                      <td class="pl-2">
+                                                                        {{ $item->tender->id}}
+                                                                      </td>
+                                                                  </tr>
+                                                    <tr class="border-b">
+                                                        <th scope="col" class="px-6 py-3 bg-gray-100">
+                                                            Nama Paket
+                                                        </th>
+                                                        <td class="pl-2">
+                                                          {{ $item->tender->namapaket}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="border-b">
+                                                      <th scope="col" class="px-6 py-3 bg-gray-100">
+                                                         Hps
+                                                      </th>
+                                                      <td class="pl-2">
+                                                        Rp. {{number_format($item->tender->hps)}}
+                                                      </td>
+                                                  </tr>
+                                                  <tr class="border-b">
+                                                      <th scope="col" class="px-6 py-3 bg-gray-100">
+                                                         Metode Pemilihan
+                                                      </th>
+                                                      <td class="pl-2">
+                                                        {{ $item->metodepengadaan}}
+                                                      </td>
+                                                  </tr>
+                                                  <tr class="border-b">
+                                                      <th scope="col" class="px-6 py-3 bg-gray-100">
+                                                         Tahun Anggaran
+                                                      </th>
+                                                      <td class="pl-2">
+                                                        {{ $item->tender->tahunanggaran}}
+                                                      </td>
+                                                  </tr>
+                                                  <tr class="border-b">
+                                                      <th scope="col" class="px-6 py-3 bg-gray-100">
+                                                         Lokasi Pekerjaan
+                                                      </th>
+                                                      <td class="pl-2">
+                                                        {{ $item->tender->lokasi}}
+                                                      </td>
+                                                  </tr>
+                                            </table>       
+                                          
+                                            <div class="py-3">
+                                              <button class="bg-cyan-700 text-white px-2 p-1 rounded-sm hover:underline" type="submit">Setuju & Ikut Tender</button>
+                                              <a href="" class="bg-gray-500 text-white px-2 p-1 rounded-sm hover:underline">Tidak Setuju</a>   
+                                            </div>
+                                           
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                          
+                                      <!-- Modal body -->
+                                      
+                                          </form>
+                                      
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                       </td>
+                      </td> 
+                       <td class="px-6 py-4">Rp. {{number_format($item->tender->hps)}}</td> 
+                       <td class="px-6 py-4">{{$item->tender->klasifikasi}}</td> 
+                       <td class="px-6 py-4">
+                           @php
+                           $hasTodaySchedule = false;
+                           foreach ($jadwal as $a) {
+                               // Mengambil tanggal jadwal
+                               $jadwalDate = \Carbon\Carbon::parse($a->tglpelaksanaan)->toDateString();
+                   
+                               // Bandingkan tanggal jadwal dengan tanggal hari ini
+                               if ($item->id_paket == $a->id_paket && $jadwalDate == now()->toDateString()) {
+                                   $hasTodaySchedule = true;
+                                   break;
+                               }
+                           }
+                       @endphp
+                           @if ($hasTodaySchedule)
+                           <a data-modal-target="crud-modalj-{{$item->id}}" data-modal-toggle="crud-modalj-{{$item->id}}" class="text-blue-500 hover:underline">
+                               {{$a->kegiatan}}
+                           </a>
+                           
+                           <div id="crud-modalj-{{$item->id}}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                               <div class="relative w-full max-w-6xl max-h-full">
+                                   <!-- Modal content -->
+                                   <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                       <!-- Modal header -->
+                                       <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                           <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                               Tahapan Paket Saat Ini {{$item->tender->namapaket}}
+                                           </h3>
+                                           <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modalj-{{$item->id}}">
+                                               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                               </svg>
+                                               <span class="sr-only">Close modal</span>
+                                           </button>
+                                       </div>
+                                       <!-- Modal body -->
+                                       <div class="py-3">
+                                           <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                                               <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg">
+                                                   <div class="p-6 bg-white border-b border-gray-200">
+                                                       <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                                       <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-6">
+                                                           <thead class="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                               <tr>
+                                                                   <th scope="col" class="px-6 py-3">
+                                                                       #
+                                                                   </th>
+                                                                   <th scope="col" class="px-6 py-3">
+                                                                       Tahapan
+                                                                   </th>
+                                                                   <th scope="col" class="px-6 py-3">
+                                                                       Hari/Tanggal Pelaksanaan
+                                                                   </th>
+                                                                   <th scope="col" class="px-6 py-3">
+                                                                       Waktu Mulai
+                                                                   </th>
+                                                                   <th scope="col" class="px-6 py-3">
+                                                                       Waktu Selesai
+                                                                   </th>
+                                                               </tr>
+                                                           </thead>
+                                                           <tbody>
+                                                               @php 
+                                                                   $jadwals = \App\Models\jadwal::where('id_paket', $item->id_paket)->get();
+                                                               @endphp
+                                                               @foreach ($jadwals as $a)
+                                                                <!-- Ganti $paketId dengan id_paket yang Anda inginkan -->
+                                                                   <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                                                       <td class="px-6 py-4">{{$loop->iteration}}</td> 
+                                                                       <td class="px-6 py-4">{{$a->kegiatan}}</td> 
+                                                                       <td class="px-6 py-4">{{Date::createFromDate($a->tglpelaksanaan)->format('l, j F Y')}}</td> 
+                                                                       <td class="px-6 py-4">{{$a->waktumulai}}</td>
+                                                                       <td class="px-6 py-4">{{$a->waktuselesai}}</td>
+                                                                   </tr>
+                                                              
+                                                           @endforeach
+                                                           </tr>
+                                                           </tbody>
+                                                       </table>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                       </div>
+                               </div>
+                           </div> 
+  
+                       @else
+                           Tidak Ada Jadwal
+                       @endif
+                       </td>
+                        
+                     </tr>
+                      @endforeach
+                       
+                    </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+    </div>
+
+    @endif
 
 <div class="py-3">
   <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -48,22 +300,217 @@
                           <th scope="col" class="px-6 py-3">
                               Akhir Pendaftaran
                           </th>
-                         
+                          <th scope="col" class="px-6 py-3">
+
+                          </th>
                       </tr>
                   </thead>
                   <tbody>
-                    
-                      <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                        
-                        <td class="px-6 py-4"></td> 
-                        <td class="px-6 py-4"></td> 
-                        <td class="px-6 py-4"></td> 
-                        <td class="px-6 py-4"></td> 
-                        <td class="px-6 py-4"></td> 
-                      </tr>
+                    @foreach ($detailtender as $item)
+                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                       
+                     <td class="px-6 py-4">{{$loop->iteration}}</td> 
+                     <td class="px-6 py-4">
+                        @if($prosestender)
+                        <a href="{{route('prosestender.show',[$prosestender->id])}}" class="text-blue-500 hover:underline"> {{$item->tender->namapaket}}</a>
+                       
+                        @else
+                        <a data-modal-target="crud-modalt-{{$item->id}}" data-modal-toggle="crud-modalt-{{$item->id}}" class="text-blue-500 hover:underline">
+                            {{$item->tender->namapaket}}</a>
+                        @endif
+                        <div id="crud-modalt-{{$item->id}}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                            <div class="relative w-full max-w-6xl max-h-full">
+                                <!-- Modal content -->
+                                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                    <!-- Modal header -->
+                                    <div class="bg-gray-50 flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                            Pendaftaran Tender
+                                        </h3>
+                                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modalt-{{$item->id}}">
+                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                            </svg>
+                                            <span class="sr-only">Close modal</span>
+                                        </button>
+                                    </div>
+                                  
+                                        <form action="{{route('prosestender.store')}}" onsubmit="return confirm('Apakah Anda Yakin dengan penawaran Anda?')" method="POST" enctype="multipart/form-data">
+                                            @csrf
+                                           <input type="hidden" name="id_paket" value="{{$item->tender->id}}">
+                                     
+                                            <div class="py-3">
+                                                <div class="max-w-7xl mx-auto sm:px-3 lg:px-3">
+                                                   
+                                                        <div class="p-6 bg-white ">
+                                                           
+                                                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 0 mt-6">
+                                                                <tr class="border-b">
+                                                                    <th scope="col" class="px-6 py-3 bg-gray-100">
+                                                                       Id Paket
+                                                                    </th>
+                                                                    <td class="pl-2">
+                                                                      {{ $item->tender->id}}
+                                                                    </td>
+                                                                </tr>
+                                                  <tr class="border-b">
+                                                      <th scope="col" class="px-6 py-3 bg-gray-100">
+                                                          Nama Paket
+                                                      </th>
+                                                      <td class="pl-2">
+                                                        {{ $item->tender->namapaket}}
+                                                      </td>
+                                                  </tr>
+                                                  <tr class="border-b">
+                                                    <th scope="col" class="px-6 py-3 bg-gray-100">
+                                                       Hps
+                                                    </th>
+                                                    <td class="pl-2">
+                                                      Rp. {{number_format($item->tender->hps)}}
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-b">
+                                                    <th scope="col" class="px-6 py-3 bg-gray-100">
+                                                       Metode Pemilihan
+                                                    </th>
+                                                    <td class="pl-2">
+                                                      {{ $item->metodepengadaan}}
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-b">
+                                                    <th scope="col" class="px-6 py-3 bg-gray-100">
+                                                       Tahun Anggaran
+                                                    </th>
+                                                    <td class="pl-2">
+                                                      {{ $item->tender->tahunanggaran}}
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-b">
+                                                    <th scope="col" class="px-6 py-3 bg-gray-100">
+                                                       Lokasi Pekerjaan
+                                                    </th>
+                                                    <td class="pl-2">
+                                                      {{ $item->tender->lokasi}}
+                                                    </td>
+                                                </tr>
+                                          </table>       
+                                        
+                                          <div class="py-3">
+                                            <button class="bg-cyan-700 text-white px-2 p-1 rounded-sm hover:underline" type="submit">Setuju & Ikut Tender</button>
+                                            <a href="" class="bg-gray-500 text-white px-2 p-1 rounded-sm hover:underline">Tidak Setuju</a>   
+                                          </div>
+                                         
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        
+                                    <!-- Modal body -->
+                                    
+                                        </form>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                     </td>
+                    </td> 
+                     <td class="px-6 py-4">Rp. {{number_format($item->tender->hps)}}</td> 
+                     <td class="px-6 py-4">{{$item->tender->klasifikasi}}</td> 
+                     <td class="px-6 py-4">
+                         @php
+                         $hasTodaySchedule = false;
+                         foreach ($jadwal as $a) {
+                             // Mengambil tanggal jadwal
+                             $jadwalDate = \Carbon\Carbon::parse($a->tglpelaksanaan)->toDateString();
+                 
+                             // Bandingkan tanggal jadwal dengan tanggal hari ini
+                             if ($item->id_paket == $a->id_paket && $jadwalDate == now()->toDateString()) {
+                                 $hasTodaySchedule = true;
+                                 break;
+                             }
+                         }
+                     @endphp
+                         @if ($hasTodaySchedule)
+                         <a data-modal-target="crud-modalj-{{$item->id}}" data-modal-toggle="crud-modalj-{{$item->id}}" class="text-blue-500 hover:underline">
+                             {{$a->kegiatan}}
+                         </a>
+                         
+                         <div id="crud-modalj-{{$item->id}}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                             <div class="relative w-full max-w-6xl max-h-full">
+                                 <!-- Modal content -->
+                                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                     <!-- Modal header -->
+                                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                             Tahapan Paket Saat Ini {{$item->tender->namapaket}}
+                                         </h3>
+                                         <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modalj-{{$item->id}}">
+                                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                             </svg>
+                                             <span class="sr-only">Close modal</span>
+                                         </button>
+                                     </div>
+                                     <!-- Modal body -->
+                                     <div class="py-3">
+                                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                                             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg">
+                                                 <div class="p-6 bg-white border-b border-gray-200">
+                                                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-6">
+                                                         <thead class="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                             <tr>
+                                                                 <th scope="col" class="px-6 py-3">
+                                                                     #
+                                                                 </th>
+                                                                 <th scope="col" class="px-6 py-3">
+                                                                     Tahapan
+                                                                 </th>
+                                                                 <th scope="col" class="px-6 py-3">
+                                                                     Hari/Tanggal Pelaksanaan
+                                                                 </th>
+                                                                 <th scope="col" class="px-6 py-3">
+                                                                     Waktu Mulai
+                                                                 </th>
+                                                                 <th scope="col" class="px-6 py-3">
+                                                                     Waktu Selesai
+                                                                 </th>
+                                                             </tr>
+                                                         </thead>
+                                                         <tbody>
+                                                             @php 
+                                                                 $jadwals = \App\Models\jadwal::where('id_paket', $item->id_paket)->get();
+                                                             @endphp
+                                                             @foreach ($jadwals as $a)
+                                                              <!-- Ganti $paketId dengan id_paket yang Anda inginkan -->
+                                                                 <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                                                     <td class="px-6 py-4">{{$loop->iteration}}</td> 
+                                                                     <td class="px-6 py-4">{{$a->kegiatan}}</td> 
+                                                                     <td class="px-6 py-4">{{Date::createFromDate($a->tglpelaksanaan)->format('l, j F Y')}}</td> 
+                                                                     <td class="px-6 py-4">{{$a->waktumulai}}</td>
+                                                                     <td class="px-6 py-4">{{$a->waktuselesai}}</td>
+                                                                 </tr>
+                                                            
+                                                         @endforeach
+                                                         </tr>
+                                                         </tbody>
+                                                     </table>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                             </div>
+                         </div> 
 
+                     @else
+                         Tidak Ada Jadwal
+                     @endif
+                     </td>
                       
-                    
+                   </tr>
+                    @endforeach
+                     
                   </tbody>
               </table>
             </div>

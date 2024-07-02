@@ -26,4 +26,18 @@ class tender extends Model
             $model->id = $id;
         });
     }
+
+    public function detailtender()
+    {
+        return $this->hasOne(detailtender::class, 'id_paket');
+    } 
+    public function prosestender()
+    {
+        return $this->hasOne(prosestender::class, 'id_paket');
+    } 
+
+    public function undanganverifikasi()
+    {
+        return $this->hasOne(prosestender::class, 'id_paket');
+    } 
 }

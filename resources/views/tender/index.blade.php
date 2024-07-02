@@ -102,16 +102,16 @@
           <td>{{$p->klasifikasi}}</td>
           <td>
               @php
-              $hasNonTender = false;
-              foreach ($tender as $a) {
+              $hasTender = false;
+              foreach ($detailtender as $a) {
                   if ($p->id == $a->id_paket) {
-                      $hasNonTender = true;
+                      $hasTender = true;
                       break;
                   }
               }
               @endphp
   
-              @if ($hasNonTender)
+              @if ($hasTender)
                   <a href="{{route('tender.show',[$p->id])}}" class="badge badge-secondary">View Detail</a>
               @else
                   <a href="{{route('tender.show',[$p->id])}}" class="badge badge-primary">Buat Tender</a>

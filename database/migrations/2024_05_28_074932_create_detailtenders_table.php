@@ -15,6 +15,12 @@ class CreateDetailtendersTable extends Migration
     {
         Schema::create('detailtenders', function (Blueprint $table) {
             $table->id();
+            $table->integer('id_paket');
+            $table->integer('id_metodepengadaan');
+            $table->enum('jenistender',['terbuka','tertutup']);
+            $table->string('bapembukaanpenawaran')->nullable();
+            $table->date('tglpembukaanpenawaran')->nullable();
+            $table->integer('created_by');
             $table->timestamps();
         });
     }

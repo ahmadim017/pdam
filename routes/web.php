@@ -3,9 +3,12 @@
 use App\Http\Controllers\administrasiController;
 use App\Http\Controllers\aktependirianController;
 use App\Http\Controllers\akteperubahaanController;
+use App\Http\Controllers\banegoisasiController;
 use App\Http\Controllers\dashboardController;
+use App\Http\Controllers\detailtenderController;
 use App\Http\Controllers\doklainnyaController;
 use App\Http\Controllers\dokumenlainnyaController;
+use App\Http\Controllers\evaluasiteknisController;
 use App\Http\Controllers\izinusahaController;
 use App\Http\Controllers\jadwalController;
 use App\Http\Controllers\kakController;
@@ -23,6 +26,7 @@ use App\Http\Controllers\pengurusperusahaanController;
 use App\Http\Controllers\penjelasanController;
 use App\Http\Controllers\penyediaController;
 use App\Http\Controllers\perlengkapanController;
+use App\Http\Controllers\prosestenderController;
 use App\Http\Controllers\rancangankontrakController;
 use App\Http\Controllers\slideController;
 use App\Http\Controllers\suratpernyataanController;
@@ -32,8 +36,7 @@ use App\Http\Controllers\uraianpekerjaanController;
 use App\Http\Controllers\userController;
 use App\Http\Controllers\userdashboardController;
 use App\Http\Controllers\welcomeController;
-use App\Models\nontender;
-use App\Models\pengajuanpenyedia;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -93,15 +96,19 @@ Route::group(['middleware' => 'auth'], function () {
 
     route::resource('verifikasi', pengajuanpenyediaController::class);
 
+    route::resource('kotakmasuk', kotakmasukController::class);
+
     route::resource('paketbaru', paketbaruController::class);
 
-    route::resource('kotakmasuk', kotakmasukController::class);
+    route::resource('prosestender',prosestenderController::class);
 
     Route::put('nontender/{nontender}', [nontenderController::class, 'update'])->name('nontender.update');
 
     Route::get('/get-kabupaten/{id}', [administrasiController::class, 'getKabupaten']);
 
     Route::get('/penjelasan/{id}', [nontenderController::class, 'penjelasan'])->name('paketbaru.penjelasan');
+
+    Route::get('/tender/penjelasan/{id}', [prosestenderController::class, 'penjelasan'])->name('prosestender.penjelasan');
 
     Route::get('/password',[passwordController::class, 'password'])->name('user.password');
 
@@ -120,6 +127,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/dataperuhsaan', function(){
         return view('dataperusahaan.index');
     })->name('dataperusahaan');
+
+    Route::get('/paketbaru', function(){
+        return view('paketbaru.index');
+    })->name('paketbaru.index');
 });
 
 
@@ -144,10 +155,41 @@ Route::middleware(['auth', 'role:VERIFIKATOR,ADMIN'])->group(function () {
     route::resource('uraianpekerjaan', uraianpekerjaanController::class);
     route::resource('doklainnya', doklainnyaController::class);
     route::resource('kontrak',kontrakController::class);
+   
+    //tender
+    
     route::resource('tender', tenderController::class);
-
+    route::resource('detailtender', detailtenderController::class);
+    Route::post('/tender/baaanwizing/{id}', [detailtenderController::class,'baaanwizing'])->name('detailtender.baaanwizing');
+    Route::post('/tender/bukapenawaran/{id}', [detailtenderController::class,'pembukaanpenawaran'])->name('detailtender.pembukaanpenawaran');
+    Route::post('/tender/baevaluasi/{id}', [detailtenderController::class,'baevaluasi'])->name('detailtender.baevaluasi');
+    Route::post('/tender/banegoisasi/{id}', [detailtenderController::class,'banegoisasi'])->name('detailtender.banegoisasi');
+    Route::post('/tender/baklarifikasi/{id}', [detailtenderController::class,'baklarifikasi'])->name('detailtender.baklarifikasi');
+    Route::post('/tender/bapengumumanpemenang/{id}', [detailtenderController::class,'bapengumumanpemenang'])->name('detailtender.bapengumumanpemenang');
+    Route::get('/tender/detailpenyedia/{id}', [detailtenderController::class,'detailpenyedia'])->name('detailtender.detailpenyedia');
     route::get('/tender/jadwal/{id}',[tenderController::class,'buat'])->name('jadwaltender.buat');
     route::get('/tender/view/jadwal/{id}',[tenderController::class,'view'])->name('jadwaltender.view');
+    Route::get('/tender/aanwizing/{id}',[tenderController::class,'aanwizing'])->name('tender.aanwizing');
+    Route::get('/tender/evaluasi/{id}',[tenderController::class,'evaluasi'])->name('tender.evaluasi');
+    Route::get('/tender/pembukaanpenawaran/{id}',[tenderController::class,'pembukaan'])->name('tender.pembukaan');
+    Route::get('/tender/penawaran/{id}',[tenderController::class,'penawaran'])->name('tender.penawaran');
+    Route::get('/tender/negoisasi/{id}',[tenderController::class,'negoisasi'])->name('tender.negoisasi');
+    Route::get('/tender/pengumumanpemenang/{id}',[tenderController::class,'pengumumanpemenang'])->name('tender.pengumumanpemenang');
+    Route::get('/tender/klarifikasi/{id}',[tenderController::class,'klarifikasi'])->name('tender.klarifikasi');
+    Route::post('/tender/sendemail/{id_prosestender}', [tenderController::class, 'sendemail'])->name('tender.sendemail');
+    Route::get('/tender/undangan/{id}/cetak', [tenderController::class, 'cetak'])->name('tender.cetak');
+    Route::get('/tender/baaanwizing/{id}/cetak', [tenderController::class, 'baaanwizing'])->name('tender.baaanwizing');
+    Route::get('/tender/bapembukaanpenawaran/{id}/cetak',[tenderController::class,'bapembukaan'])->name('tender.bapembukaan');
+    Route::get('/tender/baevaluasi/{id}/cetak',[tenderController::class,'baevaluasi'])->name('tender.baevaluasi');
+    Route::get('/tender/baklarifikasi/{id}/cetak',[tenderController::class,'baklarifikasi'])->name('tender.baklarifikasi');
+    Route::get('/tender/banegoisasi/{id}/cetak',[tenderController::class,'banegoisasi'])->name('tender.banegoisasi');
+    Route::get('/tender/bapengumumanpemenang/{id}/cetak',[tenderController::class,'bapengumumanpemenang'])->name('tender.bapengumumanpemenang');
+
+    Route::post('/evaluasipenelitian/simpan/',[evaluasiteknisController::class,'evaluasipenelitian'])->name('evaluasipenelitian.simpan');
+    Route::post('/evaluasiteknis/simpan/',[evaluasiteknisController::class,'evaluasiteknis'])->name('evaluasiteknis.simpan');
+    Route::post('/evaluasibiaya/simpan/',[evaluasiteknisController::class,'evaluasibiaya'])->name('evaluasibiaya.simpan');
+    Route::post('/evaluasiakhir/simpan/',[evaluasiteknisController::class,'evaluasiakhir'])->name('evaluasiakhir.simpan');
+    Route::post('/banegoisasi/simpan',[banegoisasiController::class,'simpan'])->name('banegoisasi.simpan');
    // route::post('/pengadaan/penyedia/{id}',[paketpekerjaanController::class,'hapus'])->name('penyedia.hapus');
     route::get('/pengadaan/jadwal/{id}',[paketpekerjaanController::class,'buat'])->name('jadwal.buat');
     route::get('/pengadaan/belumadajadwal/{id}',[paketpekerjaanController::class,'view'])->name('jadwal.view');

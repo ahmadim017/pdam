@@ -9,6 +9,7 @@
     <style>
         
         .text {
+            text-align: justify;
             font-size: 12px;
         }
 
@@ -77,64 +78,45 @@
             </tr>
         </table><br>
         
-        <p class="text"><center>Berita Acara Pengadaan Langsung</center></p>
-          <p class="text"><center>Nomor : {{$nontender->baaanwizing}} </center></p>
-             <p class="text"><center>Tanggal : {{Date::createFromDate($nontender->created_at)->format('j F Y')}} </center></p><br>
+        <p class="text"><center><u><b>Berita Acara Penjelasan Dokumen Pascakualifikasi</b></u></center></p>
+          <p class="text"><center>Nomor : {{$detailtender->baaanwizing}} </center></p>
+             <p class="text"><center>Tanggal : {{Date::createFromDate($detailtender->tglaanwizing)->format('j F Y')}} </center></p><br>
            
-             <table width="100%" style="border-collapse: collapse;" cellspacing="0" cellpadding="0">
+            
+          
+           <table width="100%" border="0" cellspacing="10" cellpadding="0">
+            
+           <tr>
+              <td class="text">Pada Hari {{$day}} Tanggal {{$tanggal}} dengan mengambil tempat di kantor Perumda Air Minum Danum Taka Kabupaten Penajam Paser Utara Jl. Propinsi KM 1,5 RT. 03 Penajam,
+                Telah mengadakan Rapat Penjelasan Pekerjaan (Aanwizing) dengan Peserta Tender pekerjaan {{$detailtender->tender->namapaket}} yang terdiri dari:
+              </td>
+            </tr>
+            </table>
+            
+          
+           <br>
+              
+          
+            <table width="100%" style="border-collapse: collapse;" cellspacing="0" cellpadding="0">
                 <thead>
                   <tr>
                     <th scope="col" class="text" style="border: 1px solid black; padding: 2px; text-align: center;">No.</th>
                     <th scope="col" class="text" style="border: 1px solid black; padding: 2px; text-align: center;">Nama Perusahaan</th>
                     <th scope="col" class="text" style="border: 1px solid black; padding: 2px; text-align: center;">Nama Direktur/Kuasa Direksi</th>
-                   
                   </tr>
                 </thead>
                 <tbody>
-                  
+                  @foreach ($prosestender as $p)
                   <tr>
-                   <td class="text" style="border: 1px solid black; padding: 2px; text-align: center;">1.</td>
-                   <td class="text" style="border: 1px solid black; padding: 2px; text-align: center;">{{$nontender->user->administrasi->badanusaha->nama}} {{$nontender->user->name}}</td>
-                   <td class="text" style="border: 1px solid black; padding: 2px; text-align: center;">{{$nontender->user->administrasi->namadirektur}}</td>
-                   </tr>
-                  
-        
-                 
+                   <td class="text" style="border: 1px solid black; padding: 2px; text-align: center;">{{$loop->iteration}}</td>
+                   <td class="text" style="border: 1px solid black; padding: 2px;">{{$p->user->administrasi->badanusaha->nama}}. {{$p->user->name}}</td>
+                   <td class="text" style="border: 1px solid black; padding: 2px; text-align: center;">{{$p->user->administrasi->namadirektur}}</td>
+                  </tr>
+                  @endforeach
                 </tbody>
-              </table><br>
-          
-           <table width="100%" border="0" cellspacing="10" cellpadding="0">
-            
-           <tr>
-              <td class="text">Unsur Pejabat Pengadaan:</td>
-            </tr>
-            </table>
-            
-          <table width="100%" border="0" cellspacing="10" cellpadding="0">
-              <tr>
-                <td valign="top" class="text">1</td>
-               <td valign="top" class="text">Suwito</td>
-              <td align="center" valign="top" class="text">:</td>
-              <td valign="top" class="text">Pejabat Pengadaan</td>
-            </tr>
-          </table><br>
-          <table width="100%" border="0" cellspacing="10" cellpadding="0">
-            
-            <tr>
-               <td class="text">Rapat Dipimpin Oleh</td>
-               <td class="text">:</td>
-               <td class="text">Suwito</td>
-             </tr>
-             <tr>
-              <td class="text">Jabatan</td>
-               <td class="text">:</td>
-               <td class="text">Pejabat Pengadaan Barang dan Jasa Perumda Air Minum Danum Taka.</td>
-             </tr>
-             </table>
-             
-           <br>
+              </table>
+              <br>
               
-
 <table width="100%" border="0" cellspacing="10" cellpadding="0">
             
             <tr>
